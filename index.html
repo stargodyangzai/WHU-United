@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- 调整为英文页面语言标识 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WHU United —— RoboCup 2026 Humanoid Robot League (Adult Division)</title>
+    <!-- 引入Bootstrap CSS样式库 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ======================================
+           全局样式：科技风格基础配置
+           ====================================== */
+        :root {
+            --primary-color: #121826; /* 稍亮的深色背景 */
+            --accent-color: #0066cc; /* 武汉大学蓝色 */
+            --secondary-accent: #7b2cbf; /* 科技紫色 */
+            --neon-pink: #ff3366; /* 柔和粉色 */
+            --neon-green: #00cc99; /* 柔和绿色 */
+            --text-light: #ffffff; /* 白色文字 */
+            --text-gray: #e0e6eb; /* 亮色灰色文字 */
+            --card-bg: rgba(25, 30, 45, 0.85); /* 稍亮的卡片背景 */
+            --whu-blue: #0066cc; /* 武汉大学主色调 */
+            --whu-green: #009933; /* 武汉大学辅助色调 */
+            --gradient-primary: linear-gradient(90deg, #0066cc, #0099cc, #00cc99); /* 优化后的渐变 */
+            --gradient-secondary: linear-gradient(90deg, #7b2cbf, #ff3366); /* 辅助渐变 */
+        }
+
+        /* 白天模式配色 */
+        [data-theme="light"] {
+            --primary-color: #f5f7fa;
+            --accent-color: #0066cc;
+            --secondary-accent: #7b2cbf;
+            --neon-pink: #ff3366;
+            --neon-green: #00cc99;
+            --text-light: #1a1a1a;
+            --text-gray: #4a5568;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --whu-blue: #0066cc;
+            --whu-green: #009933;
+            --gradient-primary: linear-gradient(90deg, #0066cc, #0099cc, #00cc99);
+            --gradient-secondary: linear-gradient(90deg, #7b2cbf, #ff3366);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding-top: 80px;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(18, 24, 38, 0.9), rgba(18, 24, 38, 0.9)),
+                url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%230066cc" stroke-width="0.5"/></svg>');
+            background-size: 100px 100px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* 白天模式背景 */
+        [data-theme="light"] body {
+            background-image: 
+                linear-gradient(rgba(245, 247, 250, 0.95), rgba(245, 247, 250, 0.95)),
+                url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="%230066cc" stroke-width="0.3"/></svg>');
+        }
+
+        /* 保持特定文本原样（非黑体） */
+        .keep-original {
+            font-family: 'Orbitron', 'Segoe UI', sans-serif !important;
+        }
+
+        /* 主题切换按钮样式 */
+        .theme-toggle, .lang-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 102, 204, 0.15);
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        [data-theme="light"] .theme-toggle,
+        [data-theme="light"] .lang-toggle {
+            background-color: rgba(0, 102, 204, 0.1);
+            border-color: rgba(0, 102, 204, 0.3);
+        }
+
+        /* ======================================
+           粒子背景容器
+           ====================================== */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* ======================================
+           加载动画
+           ====================================== */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .robot-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .robot-loader::before,
+        .robot-loader::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid transparent;
+            border-top-color: var(--accent-color);
+            animation: 旋转 1s 线性 无限;
+        }
+
+        .robot-loader::after {
+            border-top-color: var(--neon-pink);
+            animation-duration: 1.5s;
+            animation-direction: reverse;
+        }
+
+        @keyframes 旋转 {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ======================================
+           武汉大学元素样式
+           ====================================== */
+        .whu-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--whu-blue), var(--whu-green));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+            vertical-align: middle;
+            box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+        }
+
+        .whu-pattern {
+            position: absolute;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .whu-logo-mark {
+            color: var(--whu-blue);
+            font-weight: bold;
+        }
+
+        /* ======================================
+           导航栏样式：科技风格固定导航栏
+           ====================================== */
+        .navbar-container {
+            background-color: rgba(25, 30, 45, 0.95);
+            box-shadow: 0 0 20px rgba(0, 102, 204, 0.3);
+            transition: all 0.5s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 102, 204, 0.3);
+        }
+
+        [data-theme="light"] .navbar-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(0, 102, 204, 0.2);
+        }
+
+        .navbar-container.scrolled {
+            background-color: rgba(25, 30, 45, 0.98);
+            box-shadow: 0 0 30px rgba(0, 102, 204, 0.5);
+        }
+
+        [data-theme="light"] .navbar-container.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Logo样式 - 只使用彩色logo */
+        .navbar-logo {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .navbar-brand span {
+            background: linear-gradient(90deg, var(--accent-color), var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 102, 204, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-gray) !important;
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 0 2px;
+            padding: 8px 10px !important;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .nav-link.active, .nav-link:hover {
+            color: var(--accent-color) !important;
+            background-color: rgba(0, 102, 204, 0.15);
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.2);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), var(--neon-pink));
+            box-shadow: 0 0 8px var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 70%;
+        }
+
+        /* ======================================
+           英雄区：优化 - 精致科技风格（核心修改区域）
+           ====================================== */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 100px 0 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 视频背景样式：优化性能，减少滤镜 */
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            /* 减少滤镜效果以提升性能 */
+            filter: brightness(0.75);
+            /* 优化视频性能 */
+            will-change: transform;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* 视频遮罩层：优化渐变效果，增强视觉层级，替代纯色遮罩 */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(25, 30, 45, 0.85) 0%,
+                rgba(18, 24, 38, 0.6) 50%,
+                rgba(25, 30, 45, 0.95) 100%
+            );
+            z-index: -1;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="light"] .video-overlay {
+            background: linear-gradient(
+                135deg,
+                rgba(18, 24, 38, 0.75) 0%,
+                rgba(25, 30, 45, 0.65) 50%,
+                rgba(18, 24, 38, 0.8) 100%
+            );
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px 0;
+        }
+
+        /* 主标题：拆分结构，优化字体和渐变，精致发光效果 */
+        .hero-title {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-family: 'Orbitron', sans-serif;
+            text-align: left;
+        }
+
+        .hero-title span {
+            display: block;
+            color: #ffffff; /* 纯白色文字（保持不变） */
+            /* 降低模糊半径（15px→8px, 30px→15px），降低不透明度（0.8→0.4, 0.5→0.2），实现柔和霓虹效果 */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.4), 0 0 15px rgba(0, 102, 204, 0.2);
+            animation: 主标题发光 4s 缓入缓出 无限 交替;
+        }
+        .hero-title em {
+            display: block;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 500;
+            font-style: normal;
+            text-transform: none;
+            color: var(--text-gray);
+            margin-top: 10px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--text-light), var(--whu-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 优化发光动画，更柔和不刺眼 */
+        @keyframes 主标题发光 {
+            0% { text-shadow: 0 0 15px rgba(0, 102, 204, 0.6), 0 0 30px rgba(0, 204, 153, 0.4); }
+            100% { text-shadow: 0 0 25px rgba(0, 102, 204, 0.9), 0 0 40px rgba(0, 204, 153, 0.6), 0 0 50px rgba(0, 102, 204, 0.5); }
+        }
+
+        /* 副标题：优化字体、行高和颜色，提升可读性 */
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            max-width: 800px;
+            line-height: 1.8;
+            font-weight: 300;
+            text-align: left;
+            padding: 0 2px;
+            border-left: 3px solid rgba(0, 102, 204, 0.5);
+            padding-left: 20px;
+        }
+
+        /* 按钮：优化渐变和交互效果，补全缺失样式 */
+        .hero-btn {
+            padding: 15px 40px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 102, 204, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 102, 204, 0.7);
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+
+        /* ======================================
+           通用模块样式
+           ====================================== */
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+            text-transform: uppercase;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-color), var(--neon-pink));
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        /* 区域背景样式 */
+        .section-light-bg {
+            background-color: rgba(15, 20, 35, 0.02);
+        }
+
+        [data-theme="light"] .section-light-bg {
+            background-color: rgba(240, 244, 248, 0.5);
+        }
+
+        .section-dark-bg {
+            background-color: rgba(15, 20, 35, 0.8);
+        }
+
+        [data-theme="light"] .section-dark-bg {
+            background-color: rgba(240, 244, 248, 0.8);
+        }
+
+
+        /* ======================================
+        /* ======================================
+        科技风格卡片 - 统一布局和尺寸，证件照比例
+        ====================================== */
+        .card-container {
+            height: 380px;
+            margin-bottom: 30px;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tech-card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .card-front {
+            width: 100%;
+            height: 100%;
+            background-color: var(--card-bg);
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        [data-theme="light"] .card-front {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 102, 204, 0.2);
+        }
+
+        /* 卡片hover轻微上浮效果（替代翻页，保持交互感） */
+        .card-container:hover .card-front {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 102, 204, 0.3);
+        }
+
+        [data-theme="light"] .card-container:hover .card-front {
+            box-shadow: 0 10px 30px rgba(0, 102, 204, 0.15);
+        }
+
+        /* 队员/指导老师头像样式 - 证件照比例 3:4 */
+        .member-avatar, .teacher-avatar {
+            width: 135px;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            position: relative;
+            background-color: rgba(0, 102, 204, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .member-avatar img, .teacher-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.5s ease;
+            border-radius: 10px;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 102, 204, 0.5);
+            display: block;
+        }
+
+        /* 移动端头像适配 */
+        @media (max-width: 768px) {
+            .member-avatar, .teacher-avatar {
+                width: 105px;
+                height: 140px;
+            }
+        }
+
+        .tech-card:hover .member-avatar img,
+        .tech-card:hover .teacher-avatar img {
+            transform: scale(1.05);
+        }
+
+        .card-front h3 {
+            font-size: 1.35rem;
+            margin-bottom: 6px;
+            margin-top: 0;
+            color: var(--text-light);
+            line-height: 1.3;
+            min-height: 2.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-front p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .card-front p.mt-2 {
+            margin-top: 5px !important;
+        }
+
+        .card-front p small {
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* ======================================
+           机器人参数模块样式
+           ====================================== */
+        .robot-specs {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            box-shadow: 0 0 30px rgba(0, 102, 204, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .robot-specs::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-color), var(--neon-pink));
+        }
+
+        .param-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .param-label {
+            width: 180px;
+            color: var(--text-gray);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .param-value {
+            flex: 1;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* ======================================
+           联系我们模块
+           ====================================== */
+        .contact-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 50px;
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            box-shadow: 0 0 30px rgba(0, 102, 204, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 40px rgba(0, 102, 204, 0.25);
+        }
+
+        .contact-icon {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-right: 20px;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 102, 204, 0.15);
+            border-radius: 50%;
+        }
+
+        /* ======================================
+           页脚样式
+           ====================================== */
+        footer {
+            background-color: #0f141f;
+            padding: 70px 0 30px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(0, 102, 204, 0.3);
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        [data-theme="light"] footer {
+            background-color: #e8ecf1;
+            border-top: 1px solid rgba(0, 102, 204, 0.2);
+        }
+
+        .footer-text {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(0, 102, 204, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 102, 204, 0.5);
+        }
+
+        /* ======================================
+           返回顶部按钮
+           ====================================== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 102, 204, 0.5);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--neon-pink);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.5);
+        }
+
+        /* ======================================
+           动画效果 - 调整弹出时机
+           ====================================== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 卡片提前触发动画 */
+        .early-fade-in {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+        }
+
+        .early-fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ======================================
+           响应式适配（同步适配头像蓝框）
+           ====================================== */
+        @media (max-width: 768px) {
+            .hero-section {
+                text-align: center;
+                padding-top: 120px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                text-align: center;
+                border-left: none;
+                padding-left: 0;
+                margin: 0 auto 30px;
+            }
+
+            .card-container {
+                height: 360px;
+            }
+
+            .robot-specs, .contact-card {
+                padding: 25px;
+            }
+
+            .section-padding {
+                padding: 60px 0;
+            }
+            
+            .navbar-brand span {
+                font-size: 1.3rem;
+            }
+            
+            .navbar-logo {
+                height: 40px;
+            }
+            
+            /* 移动端头像容器适配 */
+            .member-avatar, .teacher-avatar {
+                width: 105px;
+                height: 140px;
+            }
+            
+            .param-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .param-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader" id="pageLoader">
+        <div class="robot-loader"></div>
+    </div>
+
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- 顶部导航栏区域 -->
+    <header class="navbar-container">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg py-3">
+                <!-- 左侧Logo -->
+                <a class="navbar-brand d-flex align-items-center ps-0" href="#">
+                    <!-- 武汉大学Logo - 只使用彩色版本 -->
+                    <img src="images/logo_color.png" alt="Wuhan University Logo" class="navbar-logo">
+                    <span style="margin-left: 15px;">WHU United</span>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#navbarNav" aria-controls="navbarNav" 
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav gap-2">
+                        <li class="nav-item"><a class="nav-link active fw-medium" href="#home" data-en="Home" data-zh="首页">Home</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#page2" data-en="About" data-zh="关于">About</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#team" data-en="Team Members" data-zh="队员">Team Members</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#teacher" data-en="Advisor Faculty" data-zh="指导老师">Advisor Faculty</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#robot" data-en="Robot Specs" data-zh="机器人参数">Robot Specs</a></li>
+                        <li class="nav-item"><a class="nav-link fw-medium" href="#contact" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+                    </ul>
+                    <div class="d-flex align-items-center ms-2 gap-2">
+                        <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+                            <i class="fas fa-sun"></i>
+                        </button>
+                        <button id="langToggle" class="lang-toggle" title="Switch language">EN</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 英雄区 - 优化（核心修改区域，保留原有图案和视频，优化布局/字体/颜色） -->
+    <section id="home" class="hero-section">
+        <!-- 武汉大学樱花背景图案 -->
+        <div class="whu-pattern" style="top: 10%; right: 5%; font-size: 8rem; color: rgba(0, 102, 204, 0.1);">
+            <i class="fas fa-university"></i>
+        </div>
+        <div class="whu-pattern" style="bottom: 10%; left: 5%; font-size: 6rem; color: rgba(0, 153, 51, 0.1);">
+            <i class="fas fa-robot"></i>
+        </div>
+        
+        <!-- 自动播放视频背景 -->
+        <video class="hero-video" autoplay loop muted playsinline preload="metadata" poster="">
+            <source src="video/demo/demo_compressed.mp4" type="video/mp4">
+            您的浏览器不支持视频播放 / Your browser does not support video playback.
+        </video>
+        
+        <!-- 优化后的视频渐变遮罩层 -->
+        <div class="video-overlay"></div>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 hero-content fade-in">
+                    <!-- 优化后的标题结构：主标题 + 校训拆分，提升视觉层级 -->
+                                        <h1 class="hero-title">
+                                                <span>WHU United </span>
+                                                <span class="keep-original" style="font-size: clamp(1.5rem, 3vw, 2.8rem);">RoboCup 2026 Humanoid Robot League (Adult Division)</span>
+                                                <em>Self-improvement, Perseverance, Seeking Truth, and Pioneering Innovation</em>
+                                        </h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 新增第二页（About / 关于） -->
+    <section id="page2" class="section-padding section-light-bg">
+        <div class="container">
+            <h2 class="section-title fade-in" data-en="About" data-zh="关于">About</h2>
+            <div class="row">
+                <div class="col-lg-10 mx-auto fade-in">
+                    <p data-en="Benefiting from the rapid development and widespread application of the Unitree G1 platform, WHU United is developing a RoboCup 2026 adult humanoid robot system, integrating reinforcement learning-based low-level motion control with competition-adapted software stacks. We aim to implement advanced RL motion primitives on the G1, such as stable walking, autonomous standing recovery and kicking. Moreover, we adapt the modular RoboCup architectures of Booster-T1 and B-Human to the G1, providing core competition components like perception-action integration, motion interfaces and behavior execution. For better team performance, we also integrate multi-agent strategy modules from 3D simulation experience, including passing tactics and dynamic forward role switching based on game scenarios. These implementations are expected to underpin reliable on-field operation and support the subsequent development of RoboCup 2026." data-zh="得益于 Unitree G1 平台的快速发展与广泛应用，WHU United 正在开发面向 RoboCup 2026 成人组的仿人机器人系统，将基于强化学习的低层运动控制与适应竞赛的软体栈相结合。我们旨在在 G1 上实现先进的 RL 运动基元，如稳定行走、自主站立恢复与踢球等。此外，我们将 Booster-T1 和 B-Human 的模块化 RoboCup 架构适配到 G1，提供感知-动作融合、运动接口与行为执行等核心竞赛组件。为提升整队表现，我们还集成了来自 3D 仿真经验的多智能体策略模块，包括传球战术与基于比赛场景的前锋角色动态切换。这些实现有望支撑可靠的现场运行并促进 RoboCup 2026 的后续发展。">
+                    Benefiting from the rapid development and widespread application of the Unitree G1 platform, WHU United is developing a RoboCup 2026 adult humanoid robot system, integrating reinforcement learning-based low-level motion control with competition-adapted software stacks. We aim to implement advanced RL motion primitives on the G1, such as stable walking, autonomous standing recovery and kicking. Moreover, we adapt the modular RoboCup architectures of Booster-T1 and B-Human to the G1, providing core competition components like perception-action integration, motion interfaces and behavior execution. For better team performance, we also integrate multi-agent strategy modules from 3D simulation experience, including passing tactics and dynamic forward role switching based on game scenarios. These implementations are expected to underpin reliable on-field operation and support the subsequent development of RoboCup 2026.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 队员名单区域（包含新成员卡片） -->
+    <section id="team" class="section-padding">
+        <div class="container">
+            <h2 class="section-title fade-in" data-en="Core Team Members" data-zh="核心队员">Core Team Members</h2>
+            <p class="text-center mb-5 fade-in" style="color: var(--text-gray); max-width: 800px; margin: 0 auto 50px;" data-en="Team members are from the School of Geodesy and Geomatics, School of Computer Science, School of Power and Mechanical Engineering, and School of Robotics of Wuhan University, covering three academic levels: undergraduate, master's, and doctoral, forming a scientific research team with a reasonable structure and strong innovation capability." data-zh="队员来自武汉大学测绘与空间信息学院、计算机学院、动力与机械工程学院与机器人学院，涵盖本科、硕士与博士等三个学术层次，形成结构合理、富有创新能力的科研团队。">
+                Team members are from the School of Geodesy and Geomatics, School of Computer Science, School of Power and Mechanical Engineering, and School of Robotics of Wuhan University, covering three academic levels: undergraduate, master's, and doctoral, forming a scientific research team with a reasonable structure and strong innovation capability.
+            </p>
+            <div class="row g-4">
+                <!-- 原有队员卡片1 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/liujinchun.jpeg" alt="Jinchun Liu">
+                                </div>
+                                <h3 data-en="Jinchun Liu" data-zh="刘劲春">Jinchun Liu</h3>
+                                <p data-en="Navigation, Guidance and Control · Master's Student" data-zh="导航、制导与控制 · 硕士生">Navigation, Guidance and Control · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片2 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/lijingyang.jpeg" alt="Jingyang Li">
+                                </div>
+                                <h3 data-en="Jingyang Li" data-zh="李靖扬">Jingyang Li</h3>
+                                <p data-en="Robotics Technology · Master's Student" data-zh="机器人技术 · 硕士生">Robotics Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3. 李洋（新增） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/liyang.jpeg" alt="Yang Li" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Yang Li" data-zh="李洋">Yang Li</h3>
+                                <p data-en="Robotics Technology · Master's Student" data-zh="机器人技术 · 硕士生">Robotics Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片3 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/lixiangkun.jpeg" alt="Xiangkun Li">
+                                </div>
+                                <h3 data-en="Xiangkun Li" data-zh="李向琨">Xiangkun Li</h3>
+                                <p data-en="Navigation Engineering · Master's Student" data-zh="导航工程 · 硕士生">Navigation Engineering · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片4 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/tuyuwei.jpeg" alt="Yuwei Tu">
+                                </div>
+                                <h3 data-en="Yuwei Tu" data-zh="涂育玮">Yuwei Tu</h3>
+                                <p data-en="Energy and Chemical Engineering · Master's Student" data-zh="能源化学工程 · 硕士生">Energy and Chemical Engineering · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Power and Mechanical Engineering" data-zh="武汉大学 · 动力与机械学院">Wuhan University · School of Power and Mechanical Engineering</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片5 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/wuxiefeng.jpg" alt="Xiefeng Wu">
+                                </div>
+                                <h3 data-en="Xiefeng Wu" data-zh="吴谢锋">Xiefeng Wu</h3>
+                                <p data-en="Artificial Intelligence · Master's Student" data-zh="人工智能 · 硕士生">Artificial Intelligence · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片6 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/maomeng.jpeg" alt="Meng Mao">
+                                </div>
+                                <h3 data-en="Meng Mao" data-zh="毛梦">Meng Mao</h3>
+                                <p data-en="Mechanical Design, Manufacturing and Automation · Undergraduate" data-zh="机械设计制造及自动化 · 本科生">Mechanical Design, Manufacturing and Automation · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Power and Mechanical Engineering" data-zh="武汉大学 · 动力与机械学院">Wuhan University · School of Power and Mechanical Engineering</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片7 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/nieyongxiang.jpeg" alt="Yongxiang Nie">
+                                </div>
+                                <h3 data-en="Yongxiang Nie" data-zh="聂永祥">Yongxiang Nie</h3>
+                                <p data-en="Intelligent Manufacturing Engineering · Undergraduate" data-zh="智能制造工程 · 本科生">Intelligent Manufacturing Engineering · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Power and Mechanical Engineering" data-zh="武汉大学 · 动力与机械学院">Wuhan University · School of Power and Mechanical Engineering</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片8 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/liwei.png" alt="Wei Li">
+                                </div>
+                                <h3 data-en="Wei Li" data-zh="李伟">Wei Li</h3>
+                                <p data-en="Mechanical Design, Manufacturing and Automation · Undergraduate" data-zh="机械设计制造及自动化 · 本科生">Mechanical Design, Manufacturing and Automation · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Power and Mechanical Engineering" data-zh="武汉大学 · 动力与机械学院">Wuhan University · School of Power and Mechanical Engineering</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 原有队员卡片9 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/huzhicheng.jpeg" alt="Zhicheng Hu">
+                                </div>
+                                <h3 data-en="Zhicheng Hu" data-zh="胡志成">Zhicheng Hu</h3>
+                                <p data-en="Robotics Engineering · Undergraduate" data-zh="机器人工程 · 本科生">Robotics Engineering · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Robotics" data-zh="武汉大学 · 机器人学院">Wuhan University · School of Robotics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 新增队员卡片10：邓一妮 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/dengyinji.jpeg" alt="Yinji Deng" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Yinji Deng" data-zh="邓茵姬">Yinji Deng</h3>
+                                <p data-en="Navigation, Guidance and Control · Master's Student" data-zh="导航、制导与控制 · 硕士生">Navigation, Guidance and Control · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 新增队员卡片11：李春宇 -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/lichunyu.jpeg" alt="Chunyu Li" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Chunyu Li" data-zh="李春雨">Chunyu Li</h3>
+                                <p data-en="Robotics Technology · Master's Student" data-zh="机器人技术 · 硕士生">Robotics Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 13. 刘筱靖（修正：刘右靖→刘筱靖，专业更新） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/liuyoujing.jpeg" alt="Xiaojing Liu" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Xiaojing Liu" data-zh="刘筱靖">Xiaojing Liu</h3>
+                                <p data-en="Robotics Technology · Master's Student" data-zh="机器人技术 · 硕士生">Robotics Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 新增队员卡片13：毛子豪 -->
+                <!-- . 毛子昊（修正：毛子豪→毛子昊，专业更新） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/maozihao.jpeg" alt="Zihao Mao" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Zihao Mao" data-zh="毛子昊">Zihao Mao</h3>
+                                <p data-en="Computer Technology · Master's Student" data-zh="计算机技术 · 硕士生">Computer Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 14. 曹心怡（新增） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/caoxinyi.jpeg" alt="Xinyi Cao" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Xinyi Cao" data-zh="曹心怡">Xinyi Cao</h3>
+                                <p data-en="Navigation Engineering · Undergraduate" data-zh="导航工程 · 本科生">Navigation Engineering · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 15. 张杨文（新增） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/zhangyangwen.jpeg" alt="Yangwen Zhang" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Yangwen Zhang" data-zh="张杨文">Yangwen Zhang</h3>
+                                <p data-en="Robotics Technology · Master's Student" data-zh="机器人技术 · 硕士生">Robotics Technology · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Computer Science" data-zh="武汉大学 · 计算机学院">Wuhan University · School of Computer Science</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 17. 郭钰豪（新增） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/guoyuhao.jpeg" alt="Yuhao Guo" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Yuhao Guo" data-zh="郭钰豪">Yuhao Guo</h3>
+                                <p data-en="Navigation Engineering · Undergraduate" data-zh="导航工程 · 本科生">Navigation Engineering · Undergraduate</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 18. 邓静怡（新增） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="member-avatar">
+                                    <img src="images/member/dengjingyi.jpeg" alt="Jingyi Deng" onerror="this.src='images/member/unitree_B2.png'">
+                                </div>
+                                <h3 data-en="Jingyi Deng" data-zh="邓静怡">Jingyi Deng</h3>
+                                <p data-en="Navigation, Guidance and Control · Master's Student" data-zh="导航、制导与控制 · 硕士生">Navigation, Guidance and Control · Master's Student</p>
+                                <p class="mt-2"><small class="whu-logo-mark" data-en="Wuhan University · School of Geodesy and Geomatics" data-zh="武汉大学 · 测绘学院">Wuhan University · School of Geodesy and Geomatics</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 指导老师区域（删除卡片背面，移除翻页效果） -->
+    <section id="teacher" class="section-padding section-dark-bg">
+        <div class="container">
+            <h2 class="section-title fade-in" data-en="Advisor Faculty" data-zh="指导老师">Advisor Faculty</h2>
+            <p class="text-center mb-5 fade-in" style="color: var(--text-gray); max-width: 800px; margin: 0 auto 50px;" data-en="All advisors are from the Undergraduate Engineering Training and Innovation Practice Center of Wuhan University, with rich experience in scientific research, competitions, and teaching, providing comprehensive academic guidance and technical support for the team." data-zh="所有指导老师来自武汉大学本科工程训练与创新实践中心，在科研、竞赛与教学方面经验丰富，为团队提供全面的学术指导与技术支持。">
+                All advisors are from the Undergraduate Engineering Training and Innovation Practice Center of Wuhan University, with rich experience in scientific research, competitions, and teaching, providing comprehensive academic guidance and technical support for the team.
+            </p>
+            <div class="row g-4">
+
+                <!-- 指导老师卡片1： -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="teacher-avatar">
+                                    <img src="images/teacher/yangshangshang.jpeg" alt="Shangshang Yang" onerror="this.src='images/member/unitree_G1.png'">
+                                </div>
+                                <h3 data-en="Shangshang Yang" data-zh="杨尚尚">Shangshang Yang</h3>
+                                <p data-en="Undergraduate Engineering Training and Innovation Practice Center" data-zh="大学生工程训练与创新实践中心">Undergraduate Engineering Training and Innovation Practice Center</p>
+                                <p data-en="Electronic Information" data-zh="机械电子工程">Electronic Information</p>
+                                <p>Email: ssy0688@whu.edu</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 指导老师卡片2：胡明宇（补充专业） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="teacher-avatar">
+                                    <img src="images/teacher/humingyu.jpeg" alt="Mingyu Hu" onerror="this.src='images/member/unitree_G1.png'">
+                                </div>
+                                <h3 data-en="Mingyu Hu" data-zh="胡明宇">Mingyu Hu</h3>
+                                <p data-en="Undergraduate Engineering Training and Innovation Practice Center" data-zh="大学生工程训练与创新实践中心">Undergraduate Engineering Training and Innovation Practice Center</p>
+                                <p data-en="Electronic Information" data-zh="电子信息">Electronic Information</p>
+                                <p>Email: mingyuhu@whu.edu.cn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 指导老师卡片3：詹骄（修正单位 + 专业） -->
+                <div class="col-md-4 early-fade-in">
+                    <div class="card-container">
+                        <div class="tech-card">
+                            <div class="card-front">
+                                <div class="teacher-avatar">
+                                    <img src="images/teacher/zhanjiao.jpeg" alt="Jiao Zhan" onerror="this.src='images/member/unitree_G1.png'">
+                                </div>
+                                <h3 data-en="Jiao Zhan" data-zh="詹骄">Jiao Zhan</h3>
+                                <p data-en="Hubei Luojia Laboratory" data-zh="湖北珞珈实验室">Hubei Luojia Laboratory</p>
+                                <p data-en="Robotics Technology" data-zh="机器人技术">Robotics Technology</p>
+                                <p>Email: zhanjiao1994@whu.edu.cn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- 机器人参数区域（保持不变） -->
+    <section id="robot" class="section-padding">
+        <div class="container">
+            <h2 class="section-title fade-in" data-en="Core Robot Specifications" data-zh="机器人参数">Core Robot Specifications</h2>
+            <p class="text-center mb-5 fade-in" style="color: var(--text-gray); max-width: 800px; margin: 0 auto 50px;" data-en="Unitree G1 Comp is a competition-level humanoid robot launched by Unitree Robotics, specially built for event scenarios such as RoboCup, integrating technical achievements in reinforcement learning, bionic motion control, and real-time environmental perception." data-zh="Unitree G1 Comp 是 Unitree Robotics 推出的竞赛级仿人机器人，专为 RoboCup 等赛事场景打造，集成了强化学习、仿生运动控制与实时环境感知等技术成果。">
+                Unitree G1 Comp is a competition-level humanoid robot launched by Unitree Robotics, specially built for event scenarios such as RoboCup, integrating technical achievements in reinforcement learning, bionic motion control, and real-time environmental perception.
+            </p>
+            <div class="row">
+                <div class="col-lg-10 mx-auto fade-in">
+                    <div class="robot-specs">
+                        <h3 class="h3 mb-4" style="color: var(--accent-color);" data-en="Unitree G1 Comp Technical Specifications" data-zh="Unitree G1 Comp 技术参数">Unitree G1 Comp Technical Specifications</h3>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Robot Height" data-zh="机器人高度">Robot Height</span>
+                            <span class="param-value">1320mm</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Robot Weight" data-zh="机器人重量">Robot Weight</span>
+                            <span class="param-value">35kg</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Walking Speed" data-zh="行走速度">Walking Speed</span>
+                            <span class="param-value">2m/s</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Degrees of Freedom" data-zh="自由度">Degrees of Freedom</span>
+                            <span class="param-value">31</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Motor Type" data-zh="驱动类型">Motor Type</span>
+                            <span class="param-value">Torso Robot Integrated Joint (Max Torque 120 N·m)</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Sensors" data-zh="传感器">Sensors</span>
+                            <span class="param-value">Camera, Intel RealSense D455 (Infrared Disabled); Gyroscope, 6-axis High-Stability IMU</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Control Unit" data-zh="控制单元">Control Unit</span>
+                            <span class="param-value">High-Performance Real-Time Motion Control Unit</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Perception & Decision Unit" data-zh="感知与决策单元">Perception & Decision Unit</span>
+                            <span class="param-value">NVIDIA Jetson Orin 16GB (Edge Computing Platform)</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Material" data-zh="材料">Material</span>
+                            <span class="param-value">Aluminum Alloy & High-Strength Engineering Plastic</span>
+                        </div>
+                        <div class="param-item">
+                            <span class="param-label" data-en="Battery" data-zh="电池">Battery</span>
+                            <span class="param-value">13S Ternary Lithium Battery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们区域（保持不变） -->
+    <section id="contact" class="section-padding section-dark-bg">
+        <div class="container">
+            <h2 class="section-title fade-in" data-en="Contact Us" data-zh="联系我们">Contact Us</h2>
+            <p class="text-center mb-5 fade-in" style="color: var(--text-gray); max-width: 800px; margin: 0 auto 50px;" data-en="We welcome friends from all walks of life, enterprises, and scientific research institutions to cooperate and communicate with us to jointly promote the development of robotics technology." data-zh="欢迎各界朋友、企业与科研机构联系我们合作交流，共同推动机器人技术的发展。">
+                We welcome friends from all walks of life, enterprises, and scientific research institutions to cooperate and communicate with us to jointly promote the development of robotics technology.
+            </p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="contact-card fade-in">
+                        <div class="d-flex mb-4 align-items-center">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="h4 mb-2" data-en="Laboratory Address" data-zh="实验室地址">Laboratory Address</h4>
+                                <p class="text-gray" data-en="Undergraduate Engineering Training and Innovation Practice Center" data-zh="本科工程训练与创新实践中心">Undergraduate Engineering Training and Innovation Practice Center</p>
+                                <p class="text-gray mt-1"><small data-en="No. 299 Bayi Road, Luojia Mountain Subdistrict, Wuchang District, Wuhan, Hubei Province" data-zh="湖北省武汉市武昌区珞珈山街道八一路299号">No. 299 Bayi Road, Luojia Mountain Subdistrict, Wuchang District, Wuhan, Hubei Province</small></p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-4 align-items-center">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="h4 mb-2" data-en="Contact Email" data-zh="联系邮箱">Contact Email</h4>
+                                <p class="text-gray">ssy0688@whu.edu</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="contact-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="h4 mb-2" data-en="Contact Phone" data-zh="联系电话">Contact Phone</h4>
+                                <p class="text-gray" data-en="15171676617 (Project Leader: Jinchun Liu)" data-zh="15171676617（项目负责人：刘劲春）">15171676617 (Project Leader: Jinchun Liu)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚（保持不变） -->
+    <footer>
+        <div class="container">
+            <div class="text-center">
+                <!-- 武汉大学校训 -->
+                <div class="mb-4">
+                    <h4 class="h5 mb-3" data-en="Self-improvement, Perseverance, Seeking Truth, and Pioneering Innovation" data-zh="自强、弘毅、求实、创新" style="color: var(--accent-color);">Self-improvement, Perseverance, Seeking Truth, and Pioneering Innovation</h4>
+                </div>
+                
+                <p class="footer-text mb-3">Wuhan University · Undergraduate Engineering Training and Innovation Practice Center</p>
+                
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.whu.edu.cn" class="social-icon"><i class="fas fa-university"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 引入粒子效果库 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <script>
+        // 页面加载完成后执行
+        window.addEventListener('load', function() {
+            // 隐藏加载动画
+            setTimeout(function() {
+                document.getElementById('pageLoader').classList.add('hidden');
+            }, 600);
+            
+            // 初始化粒子效果
+            particlesJS('particles-js', {
+                particles: {
+                    number: { 
+                        value: 70, 
+                        density: { 
+                            enable: true, 
+                            value_area: 1000 
+                        } 
+                    },
+                    color: { value: "#0066cc" },
+                    shape: { type: "circle" },
+                    opacity: { 
+                        value: 0.4, 
+                        random: true 
+                    },
+                    size: { 
+                        value: 2.5, 
+                        random: true 
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 120,
+                        color: "#009933",
+                        opacity: 0.3,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1.5,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { 
+                            enable: true, 
+                            mode: "repulse" 
+                        },
+                        onclick: { 
+                            enable: true, 
+                            mode: "push" 
+                        }
+                    }
+                }
+            });
+            
+            // 触发初始动画
+            setTimeout(初始化动画, 200);
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar-container');
+            const backToTop = document.getElementById('backToTop');
+            
+            if (window.scrollY > 30) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // 显示/隐藏返回顶部按钮
+            if (window.scrollY > 200) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            // 滚动触发动画 - 调整触发阈值，让动画更早执行
+            滚动触发动画();
+            
+            // 根据滚动位置更新导航栏高亮
+            更新导航高亮();
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 移动端点击后折叠导航栏
+                    const navbarCollapse = document.getElementById('navbarNav');
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse, { toggle: false });
+                    bsCollapse.hide();
+                }
+            });
+        });
+
+        // 返回顶部功能
+        document.getElementById('backToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 动画触发函数 - 调整触发时机，让元素更早弹出
+        function 滚动触发动画() {
+            const elements = document.querySelectorAll('.fade-in, .early-fade-in');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                // 调整触发阈值，当元素进入视口80px时触发动画
+                const elementVisible = 80;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // 初始化动画
+        function 初始化动画() {
+            滚动触发动画();
+            
+            // 为导航链接添加点击激活状态
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.forEach(item => item.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // 初始激活第一个导航链接
+            const currentSection = 获取当前区域();
+            更新导航链接状态(currentSection);
+        }
+
+        // 获取当前区域
+        function 获取当前区域() {
+            const sections = document.querySelectorAll('section[id]');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            return currentSection;
+        }
+
+        // 更新导航链接激活状态
+        function 更新导航链接状态(currentSection) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // 根据滚动位置更新导航高亮
+        function 更新导航高亮() {
+            const sections = document.querySelectorAll('section[id]');
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            if (currentSection) {
+                更新导航链接状态(currentSection);
+            }
+        }
+
+        // DOM内容加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 为卡片添加随机延迟动画
+            const cards = document.querySelectorAll('.early-fade-in');
+            cards.forEach((card, index) => {
+                card.style.transitionDelay = `${index * 0.05}s`;
+            });
+            
+            // 初始触发一次动画
+            setTimeout(() => {
+                滚动触发动画();
+            }, 100);
+        });
+
+            // 语言切换功能：根据 data-en / data-zh 属性切换文本并切换字体
+        (function() {
+            let currentLang = 'en';
+            const btn = document.getElementById('langToggle');
+            const body = document.body;
+
+            function applyLang(lang) {
+                document.querySelectorAll('[data-en]').forEach(el => {
+                    const en = el.getAttribute('data-en') || '';
+                    const zh = el.getAttribute('data-zh') || en;
+                    // 使用 innerHTML 以保留可能的内嵌标签结构
+                    el.innerHTML = (lang === 'zh') ? zh : en;
+                });
+
+                if (btn) btn.textContent = (lang === 'zh') ? 'EN' : '中';
+                currentLang = lang;
+            }
+
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    applyLang(currentLang === 'en' ? 'zh' : 'en');
+                });
+            }
+
+            // 页面初始语言为英文
+            applyLang('en');
+        })();
+
+        // 主题切换功能
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            const icon = themeToggle.querySelector('i');
+            
+            // 从 localStorage 读取保存的主题，默认为暗色
+            let currentTheme = localStorage.getItem('theme') || 'dark';
+            
+            function applyTheme(theme) {
+                if (theme === 'light') {
+                    html.setAttribute('data-theme', 'light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                } else {
+                    html.removeAttribute('data-theme');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+                localStorage.setItem('theme', theme);
+                currentTheme = theme;
+            }
+            
+            // 应用初始主题
+            applyTheme(currentTheme);
+            
+            // 点击切换主题
+            themeToggle.addEventListener('click', function() {
+                applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+            });
+        })();
+    </script>
+</body>
+</html>
